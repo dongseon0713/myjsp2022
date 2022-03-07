@@ -1,0 +1,32 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%!
+	// 선언자 설정 : 변수 또는 메서드를 선언할 경우에 사용합니다.
+	// 선언된 변수 또는 메서드는 전역의 의미(맴버변수)
+	int i = 10;
+	String str = "Hellow World";
+	
+	public int method(int a, int b){
+		return a + b;
+	}
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<%
+		out.println("i값 : " + i + "<br>");
+		out.println("str값 : "+ str + "<br>");
+		out.println("10과 20의 합 : " + method(10,20) + "<br>"); 
+	%>
+	
+	<h1>표현식을 이용한 출력</h1>
+	i값 : <%= i %><br>
+	str값 : <%= str %><br>
+	10과 20의 합 : <%= method(10,20) %><br>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+
+	<!-- **설정파일 여러개 사용하기 1.web.xml에 새로운설정파일 추가 2. servlet-context.xml 설정 복사하기(생성 설정 순서가 중요하기 때문) -->
+	<!-- 인터셉터 설정(servlet-xml과 동일한 설정파일에 합니다) -->
+	<!-- mapping태그의 요청이 들어오면 아래 bean 클래스를 실행 -->
+	
+	<!-- session에 대한 인터셉터 설정 -->
+	<interceptors>
+		<interceptor>
+			<mapping path="/session/updatePage"/>
+			<mapping path="/session/myPage"/>
+			<beans:bean class="com.zerock.util.LoginInterceptor"/>
+		</interceptor>
+	</interceptors>
+	
+	<!-- 1.aop라이브러리 다운 -->
+	<!-- 2.namespace 추가 -->
+	<!-- aop 스캔 설정 -->
+	<context:component-scan base-package="com.zerock.util"/>
+	<!-- aop어노테이션을 사용할수 있게 하는 태그 -->
+	<aop:aspectj-autoproxy />
+	
+	<!-- Board에 대한 인터셉터 설정 -->
+	<interceptors>
+		<interceptor>
+			<mapping path="/SpringWeb/board/delete"/>
+			<mapping path="/SpringWeb/board/update"/>
+			<mapping path="/SpringWeb/board/modify"/>
+			<mapping path="/SpringWeb/board/register"/>
+			<beans:bean class="com.zerock.util.BoardInterceptor"/>
+		</interceptor>
+	</interceptors>
+	
+	
+	
+</beans:beans>

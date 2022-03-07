@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- root-context.xml에는 일반적으로 DB관련 설정이 들어갑니다.  -->
+	<!-- 기본적으로 class path에 경로를 WEB-INF아래 classes폴더 경로를 잡도록 설정이 되어 있습니다. -->
+	<!-- DB설정 파일을 작성한다면, classes폴더 경로를 기준으로 경로 설정을 하도록 합니다. -->
+	
+	<!-- hikariCP 빈으로 등록하기 -->
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+		<property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521/XEPDB1"/>
+		<property name="username" value="myjsp"/>
+		<property name="password" value="myjsp"/>
+	</bean>
+	 
+	<!-- DataSource 설정 -->
+	<bean id="ds" class="com.zaxxer.hikari.HikariDataSource">
+		<constructor-arg ref="hikariConfig"></constructor-arg>
+	</bean>
+	
+	<!-- JDBC템플릿 설정 -->
+	<!-- jdbcTemplate사용을 위한 bean추가 -->
+	<!-- jdbcTemplate이름으로 객체를 생성하면서 의존 주입(HikariCP설정으로 생성된 ds) -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="ds"></property>
+	</bean>
+	
+	<!-- MyBatis의 사용의 핵심 객체 sessionFactory 추가 -->
+	<!-- 
+	 세션 팩토리는 내부적으로 DB와 연결해주고 preparedStatment의 SQL을 바인딩 처리, 반복적인 close(); 작업 또한 처리하여
+	 개발자의 코드량을 줄이며, 효율적으로 작업을 할 수 있게 도움을 준다.
+	 -->
+	<bean id="sqlSessionFactory"
+	class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="ds"></property>
+		<!--  <property name="mapperLocations" ref="classpath:com/zerock/mapper/**/*.xml"></property>-->
+	</bean>
+	
+	<!-- MyBatis의 테스트 메퍼 스캔 -->
+	<mybatis-spring:scan base-package="com.zerock.testmapper"/>
+	
+	<!-- MyBatis의 생성한 맵퍼 패키지를 스캔하는 태그 -->
+	<mybatis-spring:scan base-package="com.zerock.mapper"/>
+</beans>

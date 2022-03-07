@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<!-- 위 설정을 추가 -->
+
+<mapper namespace="com.zerock.testmapper.TestMapper">
+	<select id="getTime" resultType="String">
+		select sysdate from dual
+	</select>
+	
+	<select id="select" resultType="com.zerock.command.ScoreVO">
+		select * from score01
+	</select>
+	
+	<insert id="insert">
+		insert into score01(name,kor,eng,math) values(#{name}, #{kor}, #{eng}, #{math})
+	</insert>
+	
+	<insert id="insert2">
+		insert into score01(name,kor,eng,math) values(#{p1}, #{p2}, #{p3}, #{p4})
+	</insert>
+</mapper>

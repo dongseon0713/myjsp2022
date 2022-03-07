@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<!-- 위 설정을 추가 -->
+
+<mapper namespace="com.zerock.mapper.ScoreMapper">
+	<insert id="insert">
+		insert into score01(name, kor, eng, math) values(#{name}, #{kor}, #{eng}, #{math})
+	</insert>
+	
+	<select id="select" resultType="com.zerock.command.ScoreVO">
+		select * from score01 order by num
+	</select>
+	
+	<delete id="delete" parameterType="String">
+		delete from score01 where num=#{num}
+	</delete>
+</mapper>

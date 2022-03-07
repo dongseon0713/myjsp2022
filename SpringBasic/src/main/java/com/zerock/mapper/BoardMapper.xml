@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<!-- 위 설정을 추가 -->
+
+<!-- mapper의 namespace의 경로에는 마이바티스 설정 인터페이스의 경로와 동일이름으로 사용합니다. -->
+<mapper namespace="com.zerock.mapper.BoardMapper">
+	
+	<!--
+	 MyBatis는 내부적으로 JDBC의 pstmt를 활용하고, ?를 #{속성}으로 처리함. 
+	 id 태그의 속성은 인터페이스에 메서드 이름과 동일하게 작성합니다.
+	 여러 값을 전달하고 싶은 경우에는 커멘드 객체 사용 또는 parameterType 속성에 Map을 지정.
+	-->
+	<insert id="insert" >
+		insert into board01 (name, title, content) values(#{name}, #{title}, #{content})
+	</insert>
+	<insert id="insert2" >
+		insert into board01 (name, title, content) values(#{p1}, #{p2}, #{p3})
+	</insert>
+	<!-- resultType 속성 값은 select의 결과를 특정 객체로 만들어서 반환 -->
+	<!-- VO에 기술된 맴버변수는 DB의 컬럼명과 정확히 일치해야한다. -->
+	<select id="select" resultType="com.zerock.command.BoardVO">
+		select * from board01 order by num 
+	</select>
+	
+	<delete id="delete" parameterType="String">
+		delete from board01 where num=#{num} 
+	</delete>
+</mapper>

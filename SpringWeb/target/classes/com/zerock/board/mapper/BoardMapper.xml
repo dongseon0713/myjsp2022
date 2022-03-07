@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	 
+<!-- namespace속성에는 사용할 매퍼의 인터페이스를 경로 지정 -->
+<mapper namespace="com.zerock.board.mapper.BoardMapper">
+
+	<!-- id 속성에는 메퍼인터페이스에서 기술된 메서드 이름을 적는다 -->
+	<!-- resultType 속성은 select의 결과를 특정 객체로 만들어 반환 -->
+	<!-- VO에 기술된 맴버변수는 DB의 컬럼명과 정확히 일치해야 하며, 전체 경로를 적습니다. -->
+	
+	<!-- 게시물 목록 -->
+	<select id="getList" resultType="com.zerock.board.command.BoardVO">
+		select * from tbl_board order by num
+	</select>
+	<!-- 게시물 등록 -->
+	<insert id="insertBoard">
+		insert into tbl_board(title, content, writer) values(#{title},#{content},#{writer})
+	</insert>
+	<!-- 게시물 상세보기 -->
+	<!-- parameterType 속성 : 구문에 전달될 타입을 지정 -->
+	<select id="getContent" resultType="com.zerock.board.command.BoardVO">
+		select * from tbl_board where num=#{num}
+	</select>	
+	<!-- 게시물 수정 -->
+	<update id="updateBoard" parameterType="com.zerock.board.command.BoardVO">
+		update tbl_board set 
+		title=#{title},
+		content=#{content},
+		writer=#{writer},
+		updatedate=sysdate
+		where num=#{num}
+	</update>
+	<!-- 게시물 삭제 -->
+	<delete id="deleteBoard" parameterType="int">
+		delete from tbl_board where num=#{num}
+	</delete>
+	
+	<!-- 페이징 쿼리 -->
+	<select id="pagingList" resultType="com.zerock.board.command.BoardVO" parameterType="com.zerock.board.command.Criteria">
+		select * from 
+		(select rownum as rnum, B.* from tbl_board B 
+		where rownum &lt;= #{count_oracle} order by num desc)
+		where #{pageStart} &lt;= rnum 
+
+	</select>
+	
+	<select id="getTotal" resultType="int">
+		select count(*) from tbl_board
+	</select>
+
+
+</mapper>
