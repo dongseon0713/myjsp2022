@@ -10,9 +10,14 @@
 		<item key="isRegEx" value="false"/>
 		<item key="selection" value=""/>
 		<list key="findhistory">
+			<item value="unique"/>
+			<item value="chooseFile"/>
+			<item value="add"/>
+			<item value="btn"/>
+			<item value="logo"/>
+			<item value="findId"/>
 			<item value="nav-"/>
 			<item value="cols"/>
-			<item value="jstl"/>
 		</list>
 		<list key="replacehistory">
 		</list>

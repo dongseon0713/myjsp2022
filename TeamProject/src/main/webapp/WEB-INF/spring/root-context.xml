@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	
-	<!-- hikariCP 빈으로 등록하기 -->
+	<!-- hikariCP -->
 		<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
 			<property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
 			<property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521/XEPDB1" />
@@ -18,7 +18,7 @@
 			<property name="password" value="project" />
 		</bean>
 		
-		<!-- DataSource 설정 -->
+		<!-- DataSource ?ㅼ젙 -->
 		<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" >
 			<constructor-arg ref="hikariConfig" />
 		</bean>
@@ -29,19 +29,17 @@
 			<property name="password" value="spring"/>
 		</bean> -->
 	
-	<!-- MyBatis 사용을 위한 객체 생성  sqlSessionFactory-->
-	<!-- 
-		세션 팩토리는 내부적으로 DB와 연결해주고, pstmt와 sql문도 전달 처리하며,
-		반복적인 close() 작업 또한 처리한다.
-		개발자의 코드량을 줄이며, 효율적으로 작업 처리를 할 수 있게 해준다.
-	 -->
+	<!-- MyBatis -->
 	<bean id="sqlSessionFactory"
 	class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
 		<!--  <property name="mapperLocations" ref="classpath:com/zerock/mapper/**/*.xml"></property>-->
 	</bean>
 		
-	<!-- MyBatis의 생성한 맵퍼 패키지를 스캔하는 태그 -->
 	<mybatis-spring:scan base-package="com.project.member.mapper"/>	
-	
+	<mybatis-spring:scan base-package="com.project.board.mapper" />
+	<mybatis-spring:scan base-package="com.project.comment.mapper" />
+	<mybatis-spring:scan base-package="com.project.home.mapper"/>
+
+
 </beans>

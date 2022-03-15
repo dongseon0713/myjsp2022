@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.project.board.mapper.BoardMapper">
+  
+  <select id="pagingList"
+  resultType="com.project.board.command.BoardVO"
+  parameterType="com.project.board.command.Criteria">
+    select * from
+    (select rownum as rnum, B.* from board B
+    where rownum &lt;= #{count_oracle} order by num desc)
+    where #{pageStart} &lt;= rnum and city_b = #{city_b}
+  </select>
+  
+  <select id="pagingSearchList"
+  resultType="com.project.board.command.BoardVO"
+  parameterType="com.project.board.command.Criteria">
+    select * from
+    (select rownum as rnum, B.* from board B
+    where rownum &lt;= #{count_oracle} order by num desc)
+    where (#{pageStart} &lt;= rnum and address like '%' || #{city_b} || '%')
+    	   OR (#{pageStart} &lt;= rnum and name like '%' || #{city_b} || '%')
+    	   OR (#{pageStart} &lt;= rnum and title like '%' || #{city_b} || '%')
+
+  </select>
+  
+  <select id="getTotal" resultType="int">
+    select count(*) from board where city_b = #{city_b}
+  </select>
+  
+  <select id="getSearchTotal" resultType="int">
+  	select count(*) from board where address like '%' || #{city_b} || '%' or name like '%' || #{city_b} || '%' or title like '%' || #{city_b} || '%'
+  </select>
+  
+  <insert id="insertBoard" parameterType="com.project.board.command.BoardVO">
+    insert into board (name, address, carpark, open, close, breaktime, lastorder, holiday, writer, city_b, title, content , gdsImg, gdsThumbImg)
+    values (#{name}, #{address}, #{carpark}, #{open}, #{close}, #{breaktime}, #{lastorder}, #{holiday},
+    #{writer} ,#{city_b}, #{title}, #{content}, #{gdsImg}, #{gdsThumbImg})
+  </insert>
+  
+  <select id="getContent"
+  resultType="com.project.board.command.BoardVO">
+    select * from board where num = #{num}
+  </select>
+  
+  <update id="updateBoard" parameterType="com.project.board.command.BoardVO">
+    update board set name = #{name}, address = #{address}, carpark = #{carpark}, open = #{open}, close = #{close},
+    breaktime = #{breaktime}, lastorder = #{lastorder}, holiday = #{holiday}, city_b = #{city_b}, title = #{title},
+    content = #{content} where num = #{num}
+  </update>
+  
+  <delete id="deleteBoard">
+    delete from board where num = #{num}
+  </delete>
+  
+  <update id="upHit" parameterType="int">
+    update board set hit = hit + 1 where num = #{num}
+  </update>
+  
+  <select id="getmodifyinfo" resultType="int">
+    select count(*) from board where num = #{param1} and writer = #{param2}
+  </select>
+  
+  </mapper>

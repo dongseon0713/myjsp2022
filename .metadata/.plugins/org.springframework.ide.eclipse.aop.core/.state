@@ -5,6 +5,7 @@
 <aop-project name="TeamProject"/>
 <aop-project name="TestDB"/>
 <aop-project name="test01"/>
+<aop-project name="MyProject"/>
 <aop-project name="SpringBasic"/>
 <aop-project name="test_javaconfig_setting"/>
 </aop-reference-model>

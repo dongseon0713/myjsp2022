@@ -4,8 +4,8 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	
 <mapper namespace="com.project.member.mapper.MemberMapper">
-	<insert id="join">
-		insert into member(id,pw,name,nickname,gender,address,email,phone,phone1,phone2,question,answer) values(#{id},#{pw},#{name},#{nickname},#{gender},#{address},#{email},#{phone},#{phone1},#{phone2},#{question},#{answer})
+	<insert id="join" parameterType="com.project.member.command.MemberVO">
+		insert into member(id,pw,name,nickname,gender,address,email,emailAd,phone,phone1,phone2,question,answer) values(#{id},#{pw},#{name},#{nickname},#{gender},#{address},#{email},#{emailAd},#{phone},#{phone1},#{phone2},#{question},#{answer})
 	</insert>
 	<select id="checkId" resultType="int">
 			select count(*) as result from member where id = #{id}
@@ -17,12 +17,41 @@
 			select count(*) as result from member where id = #{id} and pw = #{pw}
 	</select>
 	
-
-	<update id="update">
+	<select id="findId" resultType="com.project.member.command.MemberVO">
+			select id from member where name=#{name} and phone=#{phone} and phone1=#{phone1} and phone2=#{phone2} and question=#{question}
+										and answer=#{answer}
+	</select>
 	
+	<select id="findIdCheck" resultType="int">
+			select count(*) as result from member where name=#{name} and phone=#{phone} and phone1=#{phone1} and phone2=#{phone2} and question=#{question}
+										and answer=#{answer}
+	</select>
+	<select id="findPw" resultType="int">
+			select count(*) as result from member where id=#{id} and email=#{email} and emailAd=#{emailAd}
+	</select>
+		
+	<update id="updatePw">
+			update member set pw=#{pw} where id=#{id}
 	</update>
 	
-	<delete id="delete">
+	<select id="getInfo" resultType="com.project.member.command.MemberVO">
+			select * from member where id = #{id}
+	</select>
 	
+	<select id="pwCheck" resultType="int">
+			select count(*) as result from member where id = #{id} and pw = #{pw}
+	</select>
+	
+	<update id="update" parameterType="com.project.member.command.MemberVO">
+			update member set name = #{name} , phone = #{phone} , phone1 = #{phone1} , phone2 = #{phone2} , nickname = #{nickname} , gender = #{gender} , address = #{address} , email = #{email} , emailAd = #{emailAd} , question = #{question}
+									, answer = #{answer} where id = #{id}									
+	</update>
+	
+	<insert id="unregister">
+			insert into unregister(reason, cause) values(#{reason}, #{cause}) 
+	</insert>
+	
+	<delete id="delete">
+			delete from member where id = #{id}
 	</delete>
 </mapper>

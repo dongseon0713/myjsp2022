@@ -133,14 +133,14 @@ public class BoardController {
 		return "board/register";
 	}
 	//post방식으로 등록처리
-	@RequestMapping(value="/register", method=RequestMethod.POST)
-	public String register(BoardVO vo) {
+	@RequestMapping(value="/regForm", method=RequestMethod.POST)
+	public String regForm(BoardVO vo) {
 		System.out.println("등록 처리");
 		
 		//서비스 처리...
 		service.register(vo);
 		
-		return "redirect:list";
+		return "redirect:/board/list";
 	}
 	
 	

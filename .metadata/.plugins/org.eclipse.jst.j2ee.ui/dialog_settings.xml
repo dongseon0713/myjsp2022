@@ -7,11 +7,14 @@
 		<item value="NULL_RUNTIME"/>
 	</list>
 	<list key="J2EE_IMPORT_null">
+		<item value="C:\Users\a0104\OneDrive\바탕 화면\Project0311_1808_lee.war"/>
 		<item value="C:\Users\tjoeun709\Desktop\MyWeb.war"/>
 	</list>
 	<list key="J2EE_EXPORT_JST_WEB">
+		<item value="C:\Users\a0104\OneDrive\바탕 화면\TeamProject20220315_Jee.war"/>
+		<item value="C:\Users\a0104\OneDrive\바탕 화면\TeamProject20220314.war"/>
+		<item value="C:\Users\a0104\OneDrive\바탕 화면\Project20220311.war"/>
+		<item value="C:\Users\a0104\OneDrive\바탕 화면\TeamProject.war"/>
 		<item value="C:\Users\tjoeun709\Desktop\TestDB.war"/>
-		<item value="C:\Users\tjoeun709\Desktop\TestDB\TestDB.war"/>
-		<item value="C:\Users\tjoeun709\Desktop\MyWeb.war"/>
 	</list>
 </section>

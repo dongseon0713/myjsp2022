@@ -1,104 +1,217 @@
-package com.project.controller;
-
-import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.project.member.command.MemberVO;
-import com.project.member.service.MemberService;
-
-@Controller
-@RequestMapping("/member/*")
-public class MemberController {
-	
-	@Autowired
-	private MemberService member;
-	
-	//·Î±×ÀÎ È­¸é Ã³¸®
-	@RequestMapping("/login")
-	public String login() {
-		
-		return "member/mem_login";
-	}
-	//·Î±×ÀÎ formÃ³¸®
-	@RequestMapping("/loginForm")
-	public String loginForm(MemberVO vo, HttpSession session, RedirectAttributes RA) {
-		int result = member.login(vo);
-		if(result == 1) {	//1°³ÀÇ Ä«¿îÆ® ³ª¿Ô´Ù´Â °ÍÀ¸·Î ·Î±×ÀÎ ¼º°ø
-			session.setAttribute("user_id", vo.getId());
-			return "redirect:/";	//homeÄÁÆ®·Ñ·¯ÀÇ ¸ÅÇÎÀ¸·Î ÀÌµ¿
-		}else {
-			RA.addFlashAttribute("msg", "¾ÆÀÌµğ ºñ¹Ğ¹øÈ£¸¦ È®ÀÎÇÏ¼¼¿ä.");
-			
-			return "redirect:/member/login";
-		}
-	}
-	
-	//È¸¿ø°¡ÀÔ È­¸éÃ³¸®
-	@RequestMapping("/join")
-	public String join() {
-		
-		
-		return "member/mem_register";
-	}
-	
-	//È¸¿ø°¡ÀÔ formÃ³¸®
-	@RequestMapping("/joinForm")
-	public String joinForm(MemberVO vo, RedirectAttributes RA) {
-		
-		//¼­ºñ½º·Î joinÀ» Ã³¸®
-		int result = member.join(vo);
-		
-		if(result == 1) {	//1À» ¹İÈ¯ ¹Ş¾Ò´Ù´Â °ÍÀº insert°¡ ¼º°ø
-			RA.addFlashAttribute("msg", "È¸¿ø°¡ÀÔ ¼º°øÇß½À´Ï´Ù.");
-		}else {		//insert ½ÇÆĞ
-			RA.addFlashAttribute("msg", "È¸¿ø°¡ÀÔ¿¡ ½ÇÆĞÇß½À´Ï´Ù.");
-		}
-				
-		return "redirect:/member/login";
-	}
-	
-	@RequestMapping("/checkId")
-	@ResponseBody
-	//¸Ş¼Òµå @ResponseBody·Î ¾î³ëÅ×ÀÌ¼ÇÀÌ µÇ¾î ÀÖ´Ù¸é ¸Ş¼Òµå¿¡¼­ ¸®ÅÏµÇ´Â °ªÀº
-	//View¸®Á¹¹ö·Î Àü´ŞµÇÁö ¾Ê°í, Çì´ç ¸Ş¼­µå·Î È£ÃâÇÑ °÷À¸·Î °á°ú¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
-	public int CheckId(@RequestParam("id") String id) {
-		
-		int result = member.checkId(id);
-		
-		return result;
-	}
-	
-	@RequestMapping("/checkNname")
-	@ResponseBody
-	//¸Ş¼Òµå @ResponseBody·Î ¾î³ëÅ×ÀÌ¼ÇÀÌ µÇ¾î ÀÖ´Ù¸é ¸Ş¼Òµå¿¡¼­ ¸®ÅÏµÇ´Â °ªÀº
-	//View¸®Á¹¹ö·Î Àü´ŞµÇÁö ¾Ê°í, Çì´ç ¸Ş¼­µå·Î È£ÃâÇÑ °÷À¸·Î °á°ú¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
-	public int CheckNname(@RequestParam("nickname") String nickname) {
-		
-		int result = member.checkNname(nickname);
-		
-		return result;
-	}
-	
-	@RequestMapping("/mem_logout")
-	public String logout(HttpSession session) {
-		session.invalidate();
-		
-		return "redirect:/member/login";
-	}
-	@RequestMapping("/mem_findId")
-	public String findId() {
-		
-		return "/member/mem_findId";
-	}
-	
-
-		
-	
-}
+/*     */ package com.project.controller;
+/*     */ 
+/*     */ import com.project.member.command.MemberVO;
+/*     */ import com.project.member.service.MemberService;
+/*     */ import javax.servlet.http.HttpSession;
+/*     */ import org.springframework.beans.factory.annotation.Autowired;
+/*     */ import org.springframework.stereotype.Controller;
+/*     */ import org.springframework.ui.Model;
+/*     */ import org.springframework.web.bind.annotation.RequestMapping;
+/*     */ import org.springframework.web.bind.annotation.RequestParam;
+/*     */ import org.springframework.web.bind.annotation.ResponseBody;
+/*     */ import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
+/*     */ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+/*     */ 
+/*     */ @Controller
+/*     */ @RequestMapping("/member/*")
+/*     */ public class MemberController
+/*     */ {
+/*     */ 
+/*     */   @Autowired
+/*     */   private MemberService member;
+/*     */ 
+/*     */   @RequestMapping("/login")
+/*     */   public String login(HttpSession session)
+/*     */   {
+/*  28 */     session.removeAttribute("id");
+/*     */ 
+/*  30 */     return "member/mem_login";
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/loginForm")
+/*     */   public String loginForm(MemberVO vo, HttpSession session, RedirectAttributes RA) {
+/*  35 */     int result = member.login(vo);
+/*  36 */     if (result == 1) {
+/*  37 */       session.setAttribute("user_id", vo.getId());
+/*  38 */       return "redirect:/";
+/*     */     }
+/*  40 */     RA.addFlashAttribute("msg", "ì•„ì´ë”” ë¹„ë°€ë²ˆí˜¸ë¥¼ í™•ì¸í•˜ì„¸ìš”.");
+/*     */ 
+/*  42 */     return "redirect:/member/login";
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/join")
+/*     */   public String join()
+/*     */   {
+/*  51 */     return "member/mem_register";
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/joinForm")
+/*     */   public String joinForm(MemberVO vo, RedirectAttributes RA)
+/*     */   {
+/*  59 */     int result = member.join(vo);
+/*     */ 
+/*  61 */     if (result == 1)
+/*  62 */       RA.addFlashAttribute("msg", "íšŒì›ê°€ì… ì„±ê³µí–ˆìŠµë‹ˆë‹¤.");
+/*     */     else {
+/*  64 */       RA.addFlashAttribute("msg", "íšŒì›ê°€ì…ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
+/*     */     }
+/*     */ 
+/*  67 */     return "redirect:/member/login";
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/checkId")
+/*     */   @ResponseBody
+/*     */   public int CheckId(@RequestParam("id") String id)
+/*     */   {
+/*  77 */     int result = member.checkId(id);
+/*     */ 
+/*  79 */     return result;
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/checkNname")
+/*     */   @ResponseBody
+/*     */   public int CheckNname(@RequestParam("nickname") String nickname)
+/*     */   {
+/*  89 */     int result = member.checkNname(nickname);
+/*     */ 
+/*  91 */     return result;
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/mem_logout")
+/*     */   public String logout(HttpSession session) {
+/*  96 */     session.invalidate();
+/*     */ 
+/*  98 */     return "redirect:/member/login";
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/mem_findId")
+/*     */   public String findId()
+/*     */   {
+/* 104 */     return "/member/mem_findId";
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/mem_idResult")
+/*     */   public String findIdForm(Model model, MemberVO vo, @RequestParam("name") String name, @RequestParam("phone") String phone, @RequestParam("phone1") int phone1, @RequestParam("phone2") int phone2, @RequestParam("question") String question, @RequestParam("answer") String answer, HttpSession session, RedirectAttributes RA)
+/*     */   {
+/* 111 */     int result = member.findIdCheck(name, phone, phone1, phone2, question, answer);
+/*     */ 
+/* 113 */     if (result == 1) {
+/* 114 */       vo = member.findId(name, phone, phone1, phone2, question, answer);
+/*     */ 
+/* 116 */       model.addAttribute("vo", vo);
+/*     */ 
+/* 118 */       return "/member/mem_idResult";
+/*     */     }
+/* 120 */     RA.addFlashAttribute("msg", "ì•„ì´ë””ë‘ ì „í™”ë²ˆí˜¸, ë³¸ì¸í™•ì¸ì„ ë‹¤ì‹œ í™•ì¸í•´ì£¼ì„¸ìš”");
+/* 121 */     return "redirect:/member/mem_findId";
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/mem_findPw")
+/*     */   public String findPw()
+/*     */   {
+/* 128 */     return "/member/mem_findPw";
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/findPwForm")
+/*     */   public String findPw(@RequestParam("id") String id, @RequestParam("email") String email, @RequestParam("emailAd") String emailAd, RedirectAttributes RA, HttpSession session)
+/*     */   {
+/* 134 */     int result = member.findPw(id, email, emailAd);
+/*     */ 
+/* 136 */     if (result == 1) {
+/* 137 */       session.setAttribute("user_id", id);
+/* 138 */       return "/member/mem_alterPw";
+/*     */     }
+/* 140 */     RA.addFlashAttribute("msg", "ì•„ì´ë””ë‘ ì´ë©”ì¼ì„ í™•ì¸í•´ì£¼ì„¸ìš”.");
+/* 141 */     return "redirect:/member/mem_findPw";
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("mem_alterPw")
+/*     */   public String mem_alterPw()
+/*     */   {
+/* 150 */     return "/member/mem_alterPw";
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/updatePwForm")
+/*     */   public String updatePwForm(@RequestParam("pw") String pw, @SessionAttribute("user_id") String id, HttpSession session, RedirectAttributes RA)
+/*     */   {
+/* 157 */     int result = member.updatePw(id, pw);
+/*     */ 
+/* 159 */     if (result == 1) {
+/* 160 */       RA.addFlashAttribute("msg", "ë³€ê²½ ë˜ì—ˆìŠµë‹ˆë‹¤. ë‹¤ì‹œ ë¡œê·¸ì¸ í•´ì£¼ì„¸ìš”.");
+/* 161 */       session.invalidate();
+/* 162 */       return "redirect:/member/login";
+/*     */     }
+/* 164 */     RA.addFlashAttribute("msg", "ë³€ê²½ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.");
+/* 165 */     return "redirect:/member/mem_alterPw";
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/mem_mypage")
+/*     */   public String mypage()
+/*     */   {
+/* 172 */     return "/member/mem_mypage";
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/mem_modify")
+/*     */   public String getInfo(@SessionAttribute("user_id") String id, Model model)
+/*     */   {
+/* 178 */     MemberVO vo = member.getInfo(id);
+/*     */ 
+/* 180 */     model.addAttribute("vo", vo);
+/*     */ 
+/* 182 */     return "/member/mem_modify";
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/mem_modifyCheck")
+/*     */   public String modifyCheck()
+/*     */   {
+/* 190 */     return "/member/mem_modifyCheck";
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/pwCheckForm")
+/*     */   public String pwCheckForm(@SessionAttribute("user_id") String id, @RequestParam("pw") String pw, RedirectAttributes RA)
+/*     */   {
+/* 197 */     int result = member.pwCheck(id, pw);
+/*     */ 
+/* 199 */     if (result == 1) {
+/* 200 */       return "redirect:/member/mem_modify";
+/*     */     }
+/* 202 */     RA.addFlashAttribute("msg", "ë¹„ë°€ë²ˆí˜¸ë¥¼ í™•ì¸í•´ì£¼ì„¸ìš”.");
+/* 203 */     return "redirect:/member/mem_modifyCheck";
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/modifyForm")
+/*     */   public String modifyForm(MemberVO vo, RedirectAttributes RA)
+/*     */   {
+/* 212 */     int result = member.update(vo);
+/*     */ 
+/* 214 */     if (result == 1) {
+/* 215 */       RA.addFlashAttribute("msg", "íšŒì› ì •ë³´ ìˆ˜ì •ì„ ì™„ë£Œí–ˆìŠµë‹ˆë‹¤.");
+/* 216 */       return "redirect:/member/mem_mypage";
+/*     */     }
+/* 218 */     RA.addFlashAttribute("msg", "íšŒì› ì •ë³´ ìˆ˜ì •ì„ ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.");
+/* 219 */     return "redirect:/member/mem_modify";
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/mem_unregister")
+/*     */   public String mem_unregister()
+/*     */   {
+/* 227 */     return "/member/mem_unregister";
+/*     */   }
+/*     */ 
+/*     */   @RequestMapping("/unregister")
+/*     */   public String unregister(@RequestParam("reason") String reason, @RequestParam("cause") String cause, @SessionAttribute("user_id") String id, HttpSession session, RedirectAttributes RA)
+/*     */   {
+/* 235 */     int result = member.unregister(reason, cause);
+/*     */ 
+/* 237 */     if (result == 1) {
+/* 238 */       member.delete(id);
+/* 239 */       session.invalidate();
+/* 240 */       RA.addFlashAttribute("msg", "íšŒì›íƒˆí‡´ ì²˜ë¦¬ê°€ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
+/* 241 */       return "redirect:/";
+/*     */     }
+/* 243 */     RA.addFlashAttribute("msg", "íšŒì›íƒˆí‡´ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
+/* 244 */     return "redirect:/member/mem_mypage";
+/*     */   }
+/*     */ }

@@ -1,0 +1,40 @@
+/*    */ package com.project.util;
+/*    */ 
+/*    */ import javax.servlet.http.HttpServletRequest;
+/*    */ import javax.servlet.http.HttpServletResponse;
+/*    */ import javax.servlet.http.HttpSession;
+/*    */ import org.springframework.web.servlet.ModelAndView;
+/*    */ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+/*    */ 
+/*    */ public class BoardInterceptor extends HandlerInterceptorAdapter
+/*    */ {
+/*    */   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+/*    */     throws Exception
+/*    */   {
+/* 16 */     HttpSession session = request.getSession();
+/* 17 */     String user_id = (String)session.getAttribute("user_id");
+/*    */ 
+/* 20 */     if (user_id == null) {
+/* 21 */       response.sendRedirect("/member/login");
+/* 22 */       return false;
+/*    */     }
+/* 24 */     return true;
+/*    */   }
+/*    */ 
+/*    */   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView)
+/*    */     throws Exception
+/*    */   {
+/* 32 */     super.postHandle(request, response, handler, modelAndView);
+/*    */   }
+/*    */ 
+/*    */   public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+/*    */     throws Exception
+/*    */   {
+/* 39 */     super.afterCompletion(request, response, handler, ex);
+/*    */   }
+/*    */ }
+
+/* Location:           C:\Users\JOO\Downloads\project20220311 (1)\
+ * Qualified Name:     com.zip.mat.util.BoardInterceptor
+ * JD-Core Version:    0.6.2
+ */

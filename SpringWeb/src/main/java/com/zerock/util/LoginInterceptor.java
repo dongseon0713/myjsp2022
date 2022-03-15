@@ -9,12 +9,12 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 	
-	//1. ½ºÇÁ¸µ¿¡¼­ Á¦°øÇÏ´Â HandlerInterceptorAdaptor Å¬·¹½º¸¦ »ó¼Ó
-	//2. alt + shift + s => overriding method¸¦ ÅëÇØ¼­ 3°¡Áö ¸Ş¼­µå ¿À¹ö¶óÀÌµù Ã³¸®
+	//1. ìŠ¤í”„ë§ì—ì„œ ì œê³µí•˜ëŠ” HandlerInterceptorAdaptor í´ë ˆìŠ¤ë¥¼ ìƒì†
+	//2. alt + shift + s => overriding methodë¥¼ í†µí•´ì„œ 3ê°€ì§€ ë©”ì„œë“œ ì˜¤ë²„ë¼ì´ë”© ì²˜ë¦¬
 	
-	//preHandle ¸Ş¼­µå´Â ÄÁÆ®·Ñ·¯¸¦ ½ÇÇàÇÏ±â Àü ¿äÃ»À» °¡·ÎÃ¤¼­ Ã³¸®ÇÔ.
-	//ÀÏ¹İÀûÀ¸·Î , ¼¼¼Ç Ã³¸®¿¡ »ç¿ëµÈ´Ù.
-	//preHandle¿¡¼­ ¼¼¼Ç Ã³¸®¸¦ Çß´Ù¸é, ½ºÇÁ¸µ ¼³Á¤ ÆÄÀÏ¿¡ <Interceptors> ÅÂ±×¸¦ »ç¿ëÇÏ¿© ¸ÊÇÎ ¼³Á¤À» ÇÕ´Ï´Ù.
+	//preHandle ë©”ì„œë“œëŠ” ì»¨íŠ¸ë¡¤ëŸ¬ë¥¼ ì‹¤í–‰í•˜ê¸° ì „ ìš”ì²­ì„ ê°€ë¡œì±„ì„œ ì²˜ë¦¬í•¨.
+	//ì¼ë°˜ì ìœ¼ë¡œ , ì„¸ì…˜ ì²˜ë¦¬ì— ì‚¬ìš©ëœë‹¤.
+	//preHandleì—ì„œ ì„¸ì…˜ ì²˜ë¦¬ë¥¼ í–ˆë‹¤ë©´, ìŠ¤í”„ë§ ì„¤ì • íŒŒì¼ì— <Interceptors> íƒœê·¸ë¥¼ ì‚¬ìš©í•˜ì—¬ ë§µí•‘ ì„¤ì •ì„ í•©ë‹ˆë‹¤.
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
@@ -23,18 +23,18 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 		if(user_id == null) {
 			response.sendRedirect("/session/loginPage");
 			return false;
-			//return falseÀÇ ÀÇ¹Ì´Â ÇÚµé·¯ ¸Ş¼­µå¸¦ ½ÇÇàÇÑ ÈÄ Controller¸¦ ¼öÇàÇÏÁö ¾ÊÀ½.
+			//return falseì˜ ì˜ë¯¸ëŠ” í•¸ë“¤ëŸ¬ ë©”ì„œë“œë¥¼ ì‹¤í–‰í•œ í›„ Controllerë¥¼ ìˆ˜í–‰í•˜ì§€ ì•ŠìŒ.
 		}else {
 			return true;
-			//return trueÀÇ ÀÇ¹Ì´Â ÇÚµé·¯ ¸Ş¼­µå¸¦ ½ÇÇàÇÑ ÈÄ Controller¸¦ ¼öÇà
+			//return trueì˜ ì˜ë¯¸ëŠ” í•¸ë“¤ëŸ¬ ë©”ì„œë“œë¥¼ ì‹¤í–‰í•œ í›„ Controllerë¥¼ ìˆ˜í–‰
 		}
 	}
 
-	//preHandle¿¡¼­ true¸¦ ¸®ÅÏÇÏ¿© ÄÁÆ®·Ñ·¯¸¦ ½ÇÇàÇÒ ¶§¸¸ µ¿ÀÛÇÕ´Ï´Ù.
+	//preHandleì—ì„œ trueë¥¼ ë¦¬í„´í•˜ì—¬ ì»¨íŠ¸ë¡¤ëŸ¬ë¥¼ ì‹¤í–‰í•  ë•Œë§Œ ë™ì‘í•©ë‹ˆë‹¤.
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		System.out.println("µ¿ÀÛÇß¾î¿ä?");
+		System.out.println("ë™ì‘í–ˆì–´ìš”?");
 		//super.postHandle(request, response, handler, modelAndView);
 	}
 

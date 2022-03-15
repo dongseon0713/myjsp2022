@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.project.home.mapper.HomeMapper">
+
+  <insert id="insertCounter" parameterType="com.project.home.command.CounterVO">
+    insert into counter (sessionid) values (#{sessionid})
+  </insert>
+  
+  <select id="getCounter" resultType="_int">
+  	select MAX(num) from counter
+  </select>
+  
+  <update id="update">
+  	update counter set num = rownum
+  </update>
+  
+  
+  </mapper>
